@@ -110,7 +110,8 @@ load_table(std::filesystem::path const & path)
         long const value = std::strtol(hexstr.c_str(), &end, 16);
 
         // value must be in range
-        if (value > 16777215 or value < 0) {
+        long const color_max = 16777215;
+        if (value < 0 or value > color_max) {
             return tl::unexpected("color values must be between 0 and 255 (inclusive)"s);
         }
         // value must be an int
