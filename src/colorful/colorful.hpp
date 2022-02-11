@@ -94,26 +94,33 @@ load_table(std::filesystem::path const & path)
     std::string line;
     while (std::getline(config, line)) {
         std::istringstream line_stream(line);
-        std::string name;
+        std::string name, hexstr;
 
         // split by colon
         if (not std::getline(line_stream, name, ':')) {
-            return tl::unexpected("encountered an i/o error");
+            return tl::unexpected("encountered an i/o error"s);
+        }
+        if (not std::getline(line_stream, hexstr)) {
+            return tl::unexpected("encountered an i/o error"s);
         }
 
         // parse the hex value
-        std::uint8_t value;
-        line_stream >> std::hex >> value;
+        char * end;
+        errno = 0;
+        long const value = std::strtol(hexstr.c_str(), &end, 16);
 
-        if (line_stream.bad()) {
-            return tl::unexpected("encountered an i/o error");
+        // value must be in range
+        if (value > 16777215 or value < 0) {
+            return tl::unexpected("color values must be between 0 and 255 (inclusive)"s);
         }
-        else if (line_stream.fail()) {
-            return tl::unexpected("color value given is non-integer");
+        // value must be an int
+        else if (hexstr == "\0" or *end != '\0') {
+            return tl::unexpected("color value given is non-integer"s);
         }
 
         // and add it to the color table
         colors.insert_or_assign(name, color_from_hex<Color>(value));
     }
+    return colors;
 }
 }
