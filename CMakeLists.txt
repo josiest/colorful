@@ -12,13 +12,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # specify file interface
 set(colorful_SRCEXT hpp)
-set(colorful_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(colorful_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # --- create library ---
 
 add_library(colorful INTERFACE)
 target_include_directories(colorful INTERFACE
-    $<BUILD_INTERFACE:${colorful_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${colorful_SOURCE_DIR}/colorful>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 # -- export library --
@@ -36,8 +36,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/colorfulConfigVersion.cmake
     VERSION ${colorful_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
+    COMPATIBILITY AnyNewerVersion)
 
 # generate the package configuration file
 configure_package_config_file(
@@ -50,12 +49,6 @@ export(EXPORT colorfulTargets
        FILE ${CMAKE_CURRENT_BINARY_DIR}/colorfulTargets.cmake
        NAMESPACE colorful::)
 
-# install the export details
-install(EXPORT colorfulTargets
-        FILE colorfulTargets.cmake
-        NAMESPACE colorful::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/colorful)
-
 # install the generated files
 install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/colorfulConfig.cmake
@@ -63,14 +56,9 @@ install(FILES
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/colorful)
 
 # install the include files
-install(DIRECTORY ${colorful_INCLUDE_DIR}/colorful
+install(DIRECTORY ${colorful_SOURCE_DIR}/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         FILES_MATCHING PATTERN "*.${colorful_SRCEXT}")
 
 export(PACKAGE colorful)
-
-if (UNIX)
-    set(CMAKE_INSTALL_PREFIX /usr/local)
-elseif(WIN32)
-    set(CMAKE_INSTALL_PREFIX "C:\\Program Files\\colorful")
-endif()
+set(CMAKE_INSTALL_PREFIX /usr/local)

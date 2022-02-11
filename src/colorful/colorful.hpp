@@ -15,6 +15,8 @@
 
 namespace colorful {
 
+using namespace std::string_literals;
+
 template<class Color>
 concept color = requires(int v) {
     Color(v, v, v, v);
@@ -64,8 +66,8 @@ load_table(std::filesystem::path const & path)
     std::error_code ec;
 
     // make sure the file is valid
-    bool const file_exists = fs::exists(path, ec);
-    bool const file_is_valid = fs::is_regular_file(path, ec);
+    bool const file_exists = std::filesystem::exists(path, ec);
+    bool const file_is_valid = std::filesystem::is_regular_file(path, ec);
 
     // return an error if the file given isn't valid
     if (ec) {
@@ -86,7 +88,7 @@ load_table(std::filesystem::path const & path)
         return tl::unexpected("coudln't open "s + path.string());
     }
 
-    color_table colors;
+    color_table<Color> colors;
 
     // read each line
     std::string line;
@@ -95,7 +97,7 @@ load_table(std::filesystem::path const & path)
         std::string name;
 
         // split by colon
-        if (not std::getline(line_stream, name, ":")) {
+        if (not std::getline(line_stream, name, ':')) {
             return tl::unexpected("encountered an i/o error");
         }
 
@@ -111,7 +113,7 @@ load_table(std::filesystem::path const & path)
         }
 
         // and add it to the color table
-        colors.insert_or_assign(name, color_from_hex(value));
+        colors.insert_or_assign(name, color_from_hex<Color>(value));
     }
 }
 }
