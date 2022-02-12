@@ -44,8 +44,8 @@ int main()
     fs::path const color_path = fs::absolute("../colors.yaml");
     auto colors = cf::load_table<color>(color_path);
 
-    // load_table returns a tl::expected - so we'll need to check to make sure
-    // that the color table loaded correctly before dereferencing it
+    // load_table returns a tl::expected - so we'll need to check
+    // that the color table loaded correctly before dereferencing
     if (not colors) {
         std::cout << "unable to load colors: "
                   << colors.error() << std::endl;
