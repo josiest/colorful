@@ -17,7 +17,8 @@ struct color { int r, g, b, a; };
 namespace std {
 ostream & operator<<(ostream & os, color const & c)
 {
-    os << hex << "{" << c.r << ", " << c.g << ", " << c.b << ", " << c.a << "}";
+    os << hex << "{" << c.r << ", " << c.g
+              << ", " << c.b << ", " << c.a << "}";
     return os;
 }
 }
@@ -32,7 +33,8 @@ int main()
     fs::path const color_path = fs::absolute("../colors.yaml");
     auto colors = cf::load_table<color>(color_path);
     if (not colors) {
-        std::cout << "unable to load colors: " << colors.error() << std::endl;
+        std::cout << "unable to load colors: "
+                  << colors.error() << std::endl;
         return EXIT_FAILURE;
     }
 
