@@ -65,3 +65,10 @@ light-blue: 0x66ccff
 rose: 0xff6666
 lavender: 0x9999ff
 ```
+
+## Installing
+
+Colorful is just a single header file, so insstalling it is as simple
+as copying `colorful.hpp` into your project. Alternatively you can
+also install it via cmake.
+
