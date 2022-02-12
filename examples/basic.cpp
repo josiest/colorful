@@ -8,10 +8,12 @@
 #include <iomanip>
 #include <filesystem>
 
-struct color { int r, g, b, a; };
+// aliases
 namespace cf = colorful;
 namespace fs = std::filesystem;
 
+// a simple color struct, and how to print it
+struct color { int r, g, b, a; };
 namespace std {
 ostream & operator<<(ostream & os, color const & c)
 {
@@ -22,9 +24,11 @@ ostream & operator<<(ostream & os, color const & c)
 
 int main()
 {
+    // demonstrate parsing a color from an integer
     auto white = cf::color_from_hex<color>(0xffffff);
     std::cout << "white: " << white << std::endl;
 
+    // demonstrate loading from a path
     fs::path const color_path = fs::absolute("../colors.yaml");
     auto colors = cf::load_table<color>(color_path);
     if (not colors) {
